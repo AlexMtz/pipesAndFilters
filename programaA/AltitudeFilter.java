@@ -1,6 +1,7 @@
 //package javaapplication2;
 
 import java.text.DecimalFormat;
+import java.nio.ByteBuffer;
 
 /**
  * ****************************************************************************************************************
@@ -25,15 +26,15 @@ public class AltitudeFilter extends FilterFramework {
 
     public void run() {
 
-        int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
-        int IdLength = 4;				// This is the length of IDs in the byte stream
+        int MeasurementLength = 8;      // This is the length of all measurements (including time) in bytes
+        int IdLength = 4;               // This is the length of IDs in the byte stream
 
-        byte databyte = 0;				// This is the data byte read from the stream
-        int bytesread = 0;				// This is the number of bytes read from the stream
+        byte databyte = 0;              // This is the data byte read from the stream
+        int bytesread = 0;              // This is the number of bytes read from the stream
 
-        long measurement;				// This is the word used to store all measurements - conversions are illustrated.
-        int id;							// This is the measurement id
-        int i;					// The byte of data read from the file
+        long measurement;               // This is the word used to store all measurements - conversions are illustrated.
+        int id;                         // This is the measurement id
+        int i;                  // The byte of data read from the file
 
         // Next we write a message to the terminal to let the world know we are alive...
         System.out.print("\n" + this.getName() + "::Altitude Reading ");
@@ -49,44 +50,47 @@ public class AltitudeFilter extends FilterFramework {
                 id = 0;
 
                 for (i = 0; i < IdLength; i++) {
-                    databyte = ReadFilterInputPort();	// This is where we read the byte from the stream...
+                    databyte = ReadFilterInputPort();   // This is where we read the byte from the stream...
 
-                    id = id | (databyte & 0xFF);		// We append the byte on to ID...
+                    id = id | (databyte & 0xFF);        // We append the byte on to ID...
 
                     if (i != IdLength - 1) // If this is not the last byte, then slide the
-                    {									// previously appended byte to the left by one byte
-                        id = id << 8;					// to make room for the next byte we append to the ID
+                    {                                   // previously appended byte to the left by one byte
+                        id = id << 8;                   // to make room for the next byte we append to the ID
 
                     } // if
 
-                    bytesread++;						// Increment the byte count
+                    bytesread++;                        // Increment the byte count
                     WriteFilterOutputPort(databyte);
                 } // for
                 measurement = 0;
 
                 for (i = 0; i < MeasurementLength; i++) {
                     databyte = ReadFilterInputPort();
-                    measurement = measurement | (databyte & 0xFF);	// We append the byte on to measurement...
+                    measurement = measurement | (databyte & 0xFF);  // We append the byte on to measurement...
 
                     if (i != MeasurementLength - 1) // If this is not the last byte, then slide the
-                    {												// previously appended byte to the left by one byte
-                        measurement = measurement << 8;				// to make room for the next byte we append to the
+                    {                                               // previously appended byte to the left by one byte
+                        measurement = measurement << 8;             // to make room for the next byte we append to the
                         // measurement
                     } // if
 
-                    bytesread++;									// Increment the byte count
-                    WriteFilterOutputPort(databyte);
+                    bytesread++; // Increment the byte count
+                    if( id != 2){
+                        WriteFilterOutputPort(databyte);
+                    }                                   
                 } // if
 
                 if (id == 2) {
                     DecimalFormat df = new DecimalFormat("######.#####");
                     double pies = Double.longBitsToDouble(measurement);
                     double metros = pies * .3048;
-                    //System.out.print("Altitud: " + df.format(metros));
-
+                    metros = Double.parseDouble(df.format(metros));
+                    byte [] bytes = ByteBuffer.allocate(8).putDouble(metros).array();
+                    for(int j= 0; j < bytes.length; j++){
+                        WriteFilterOutputPort(bytes[j]);
+                    } //for
                 }
-                //System.out.print( "\n" );
-                //WriteFilterOutputPort(databyte);
             } // try
             catch (EndOfStreamException e) {
                 ClosePorts();

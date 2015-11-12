@@ -25,11 +25,10 @@
 * Internal Methods: None
 *
 ******************************************************************************************************************/
-import java.util.*;						// This class is used to interpret time words
-import java.text.SimpleDateFormat;		// This class is used to format and write time in a string format.
-import java.text.DecimalFormat;
+		// This class is used to format and write time in a string format.
 import java.io.*;
-
+import java.util.*;						// This class is used to interpret time words
+import java.text.SimpleDateFormat;
 public class SinkFilter extends FilterFramework
 {
 	public void run()
@@ -41,7 +40,7 @@ public class SinkFilter extends FilterFramework
 		*************************************************************************************/
 
 		Calendar TimeStamp = Calendar.getInstance();
-		SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
+		SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy:DD:HH:MM:SS");
 
 		int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
 		int IdLength = 4;				// This is the length of IDs in the byte stream
@@ -56,10 +55,8 @@ public class SinkFilter extends FilterFramework
 		
 		File salida = new File("OutputSystemA.txt");
 		try{ //try
-			FileWriter writer = new FileWriter(salida);
-			BufferedWriter bufferWriter = new BufferedWriter(writer);
-			PrintWriter printer = new PrintWriter(writer);
-			printer.println("Tiempo              Temperatura (C)    Altitud (M)     Velocidad (K)");
+        	BufferedWriter bw = new BufferedWriter(new FileWriter(salida));
+			bw.write("Tiempo\t\t\t\tVelocidad (K)\tAltitud (M)\t\tTemperatura (C)\n");
 		
 		 
 		/*************************************************************
@@ -138,8 +135,8 @@ public class SinkFilter extends FilterFramework
 				if ( id == 0 )
 				{
 					TimeStamp.setTimeInMillis(measurement);
-					//System.out.print( "Tiempo: " + TimeStampFormat.format(TimeStamp.getTime()) );
-					printer.print(TimeStampFormat.format(TimeStamp.getTime()) + "  ");
+					bw.write(TimeStampFormat.format(TimeStamp.getTime()) + "\t");
+					//bw.write(resultado+"\t");
 					countmeasure++;
 				} // if
 
@@ -155,39 +152,27 @@ public class SinkFilter extends FilterFramework
 
 				if ( id == 1 )
 				{
-					DecimalFormat df = new DecimalFormat("######.#####");
 					double nudos = Double.longBitsToDouble(measurement);
-					double kmh = nudos*1.852;
-					//System.out.print( "Velocidad: " + df.format(kmh) + " ID = " + id);
-					printer.print(df.format(kmh) + "  ");
+					bw.write(nudos + "\t\t");
 					countmeasure++;
 				} // if
 				
 				if ( id == 2 )
 				{
-					DecimalFormat df = new DecimalFormat("######.#####");
-                                        double pies = Double.longBitsToDouble(measurement);
-                                        double metros = pies*.3048;
-					//System.out.print( "Altitud: " + df.format(metros));
-					printer.print(df.format(metros) + "  ");
+                    double pies = Double.longBitsToDouble(measurement);
+                    bw.write(pies + "\t\t");
 					countmeasure++;
 				} // if
 				
 				if ( id == 4 )
 				{
-					DecimalFormat df = new DecimalFormat("###.#####");
-                                        double f = Double.longBitsToDouble(measurement);
-                                        double c = (f-32)/1.8;
-					//System.out.print( "Temperatura: " + df.format(c));
-					printer.print(df.format(c));
+                    double f = Double.longBitsToDouble(measurement);
+                    bw.write(f+"");
 					countmeasure++;
 				} // if
 				if(countmeasure%4 == 0){//if
-					//printer.print("\n");
-					//System.out.println();
+					bw.write("\n");
 				}//if
-				//System.out.print( "\n" );
-
 			} // try
 			/*******************************************************************************
 			*	The EndOfStreamExeception below is thrown when you reach end of the input
@@ -199,6 +184,7 @@ public class SinkFilter extends FilterFramework
 			{
 				ClosePorts();
 				System.out.print( "\n" + this.getName() + "::Sink Exiting; bytes read: " + bytesread );
+				bw.close();
 				break;
 
 			} // catch
