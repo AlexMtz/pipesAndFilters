@@ -36,7 +36,14 @@ public class Plumber
                 PressureFilter Filter6 = new PressureFilter();
 		SinkFilter Filter7 = new SinkFilter();
 		
-
+	
+		Filter1.addOutPipes(1);
+		Filter2.addOutPipes(1);
+		Filter3.addOutPipes(1);
+		Filter4.addOutPipes(1);
+		Filter5.addOutPipes(1);
+		Filter6.addOutPipes(1);
+		Filter7.addOutPipes(1);
 		/****************************************************************************
 		* Here we connect the filters starting with the sink filter (Filter 1) which
 		* we connect to Filter2 the middle filter. Then we connect Filter2 to the
@@ -45,12 +52,12 @@ public class Plumber
 
 		//Filter6.Connect(Filter5); // This essentially says, "connect Filter3 input port to Filter2 output port
                 //Filter6.Connect(Filter4);
-                Filter7.Connect(Filter6);
-                Filter6.Connect(Filter5);
-                Filter5.Connect(Filter4);
-                Filter4.Connect(Filter3);
-                Filter3.Connect(Filter2);
-		Filter2.Connect(Filter1); // This essentially says, "connect Filter2 input port to Filter1 output port
+                Filter7.Connect(Filter6, 0);
+                Filter6.Connect(Filter5, 0);
+                Filter5.Connect(Filter4, 0);
+                Filter4.Connect(Filter3, 0);
+                Filter3.Connect(Filter2, 0);
+		Filter2.Connect(Filter1, 0); // This essentially says, "connect Filter2 input port to Filter1 output port
 
 		/****************************************************************************
 		* Here we start the filters up. All-in-all,... its really kind of boring.

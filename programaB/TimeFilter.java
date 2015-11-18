@@ -62,7 +62,7 @@ public class TimeFilter extends FilterFramework
                     } // if
 
                     bytesread++;						// Increment the byte count
-                    WriteFilterOutputPort(databyte);
+                    WriteFilterOutputPort(databyte, 0);
 
                 } // for
                 measurement = 0;
@@ -78,11 +78,11 @@ public class TimeFilter extends FilterFramework
                     } // if
 
                     	bytesread++;									// Increment the byte count
-                        WriteFilterOutputPort(databyte);
+                        WriteFilterOutputPort(databyte, 0);
                 } // for
-                databyte = ReadFilterInputPort();
+                //databyte = ReadFilterInputPort();
 				//bytesread++;
-				WriteFilterOutputPort(databyte);
+				//WriteFilterOutputPort(databyte, 0);
 				//byteswritten++;
             } // try
             catch (EndOfStreamException e) {

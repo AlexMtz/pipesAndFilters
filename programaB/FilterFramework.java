@@ -43,7 +43,7 @@ public class FilterFramework extends Thread
 	// Define filter input and output ports
 
 	private PipedInputStream InputReadPort = new PipedInputStream();
-	private PipedOutputStream OutputWritePort = new PipedOutputStream();
+	private PipedOutputStream OutputWritePort[]; 
 
 	// The following reference to a filter is used because java pipes are able to reliably
 	// detect broken pipes on the input port of the filter. This variable will point to
@@ -52,6 +52,16 @@ public class FilterFramework extends Thread
 
 	private FilterFramework InputFilter;
 
+        
+        public void addOutPipes(int tamOut) {
+            OutputWritePort = new PipedOutputStream[tamOut];
+            for(int i=0; i<tamOut; i++) {
+                OutputWritePort[i] = new PipedOutputStream();
+                
+            }
+            System.out.println("se crearon " + OutputWritePort.length + " pipes de salida para " + this.getName());
+        }
+        
 	/***************************************************************************
 	* InnerClass:: EndOfStreamExeception
 	* Purpose: This
@@ -90,13 +100,12 @@ public class FilterFramework extends Thread
 	*
 	****************************************************************************/
 
-	void Connect( FilterFramework Filter )
+	void Connect( FilterFramework Filter, int output )
 	{
 		try
 		{
 			// Connect this filter's input to the upstream pipe's output stream
-
-			InputReadPort.connect( Filter.OutputWritePort );
+			InputReadPort.connect( Filter.OutputWritePort[output] );
 			InputFilter = Filter;
 
 		} // try
@@ -148,8 +157,7 @@ public class FilterFramework extends Thread
 					throw new EndOfStreamException("End of input stream reached");
 
 				} //if
-
-				sleep(250);
+				sleep(5);
 
 			} // while
 
@@ -202,12 +210,12 @@ public class FilterFramework extends Thread
 	*
 	****************************************************************************/
 
-	void WriteFilterOutputPort(byte datum)
+	void WriteFilterOutputPort(byte datum, int pipe)
 	{
 		try
 		{
-            OutputWritePort.write((int) datum );
-		   	OutputWritePort.flush();
+                        OutputWritePort[pipe].write((int) datum );
+		   	OutputWritePort[pipe].flush();
 
 		} // try
 
@@ -271,7 +279,9 @@ public class FilterFramework extends Thread
 		try
 		{
 			InputReadPort.close();
-			OutputWritePort.close();
+                        for (int i=0; i<OutputWritePort.length; i++) {
+                            OutputWritePort[i].close();
+                        }
 
 		}
 		catch( Exception Error )

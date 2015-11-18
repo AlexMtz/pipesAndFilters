@@ -61,7 +61,7 @@ public class AltitudeFilter extends FilterFramework {
                     } // if
 
                     bytesread++;                        // Increment the byte count
-                    WriteFilterOutputPort(databyte);
+                    WriteFilterOutputPort(databyte, 0);
                 } // for
                 measurement = 0;
 
@@ -77,7 +77,7 @@ public class AltitudeFilter extends FilterFramework {
 
                     bytesread++; // Increment the byte count
                     if( id != 2){
-                        WriteFilterOutputPort(databyte);
+                        WriteFilterOutputPort(databyte, 0);
                     }                                   
                 } // if
 
@@ -88,7 +88,7 @@ public class AltitudeFilter extends FilterFramework {
                     metros = Double.parseDouble(df.format(metros));
                     byte [] bytes = ByteBuffer.allocate(8).putDouble(metros).array();
                     for(int j= 0; j < bytes.length; j++){
-                        WriteFilterOutputPort(bytes[j]);
+                        WriteFilterOutputPort(bytes[j], 0);
                     } //for
                 }
             } // try

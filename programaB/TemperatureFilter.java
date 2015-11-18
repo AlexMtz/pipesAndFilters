@@ -61,7 +61,7 @@ public class TemperatureFilter extends FilterFramework {
                     } // if
 
                     bytesread++;                        // Increment the byte count
-                    WriteFilterOutputPort(databyte);
+                    WriteFilterOutputPort(databyte, 0);
                 } // for
                 measurement = 0;
 
@@ -77,7 +77,7 @@ public class TemperatureFilter extends FilterFramework {
 
                         bytesread++;// Increment the byte count
                         if(id != 4){
-                            WriteFilterOutputPort(databyte);
+                            WriteFilterOutputPort(databyte, 0);
                         }
                     
                     } // if
@@ -89,7 +89,7 @@ public class TemperatureFilter extends FilterFramework {
                         c = Double.parseDouble(df.format(c));
                         byte [] bytes = ByteBuffer.allocate(8).putDouble(c).array();
                         for (int j=0; j<bytes.length; j++){
-                            WriteFilterOutputPort(bytes[j]);
+                            WriteFilterOutputPort(bytes[j], 0);
                         }
                     } //if
                 } // try

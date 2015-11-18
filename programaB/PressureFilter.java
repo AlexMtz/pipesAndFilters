@@ -66,7 +66,7 @@ public class PressureFilter extends FilterFramework {
                     } // if
 
                     bytesread++;                        // Increment the byte count
-                    WriteFilterOutputPort(databyte);
+                    WriteFilterOutputPort(databyte, 0);
                 } // for
                 measurement = 0;
 
@@ -82,7 +82,7 @@ public class PressureFilter extends FilterFramework {
 
                         bytesread++;// Increment the byte count
                         if(id != 3){
-                            WriteFilterOutputPort(databyte);
+                            WriteFilterOutputPort(databyte, 0);
                         }
                     } // if
                     //Codigo para trabajar con la presion
