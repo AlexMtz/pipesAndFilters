@@ -34,7 +34,9 @@ public class Plumber
                 VelocityFilter Filter4 = new VelocityFilter();
                 AltitudeFilter Filter5 = new AltitudeFilter();
                 PressureFilter Filter6 = new PressureFilter();
-		SinkFilter Filter7 = new SinkFilter();
+                MergeFilter Filter7 = new MergeFilter();
+		SinkFilter Filter8 = new SinkFilter();
+		//SinkFilterB Filter9 = new SinkFilterB();
 		
 	
 		Filter1.addOutPipes(1);
@@ -43,7 +45,9 @@ public class Plumber
 		Filter4.addOutPipes(1);
 		Filter5.addOutPipes(1);
 		Filter6.addOutPipes(1);
-		Filter7.addOutPipes(1);
+		Filter7.addOutPipes(2);
+		Filter8.addOutPipes(1);
+		//Filter9.addOutPipes(1);
 		/****************************************************************************
 		* Here we connect the filters starting with the sink filter (Filter 1) which
 		* we connect to Filter2 the middle filter. Then we connect Filter2 to the
@@ -52,6 +56,9 @@ public class Plumber
 
 		//Filter6.Connect(Filter5); // This essentially says, "connect Filter3 input port to Filter2 output port
                 //Filter6.Connect(Filter4);
+
+		//Filter9.Connect(Filter7, 1);
+                Filter8.Connect(Filter7, 0);
                 Filter7.Connect(Filter6, 0);
                 Filter6.Connect(Filter5, 0);
                 Filter5.Connect(Filter4, 0);
@@ -70,6 +77,8 @@ public class Plumber
                 Filter5.start();
                 Filter6.start();
                 Filter7.start();
+                Filter8.start();
+                //Filter9.start();
 
    } // main
 

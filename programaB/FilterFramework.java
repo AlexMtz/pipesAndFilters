@@ -59,7 +59,6 @@ public class FilterFramework extends Thread
                 OutputWritePort[i] = new PipedOutputStream();
                 
             }
-            System.out.println("se crearon " + OutputWritePort.length + " pipes de salida para " + this.getName());
         }
         
 	/***************************************************************************
