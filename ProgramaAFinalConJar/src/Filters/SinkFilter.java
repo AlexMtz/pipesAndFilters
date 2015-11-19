@@ -1,4 +1,4 @@
-//package javaapplication2;
+package Filters;
 
 /******************************************************************************************************************
 * File:SinkFilter.java
@@ -54,7 +54,6 @@ public class SinkFilter extends FilterFramework
 		int countmeasure = 0;			// Contador de valores, cada 4 realiza un salto de linea
 		
         File salida = null;//new File("OutputSystemA.txt");
-        try { //try
             String arc = "";
             try {
                 File jarFile = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
